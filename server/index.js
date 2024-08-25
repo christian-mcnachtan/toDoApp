@@ -29,20 +29,18 @@ db.connect((err) => {
 });
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('*', (req, res) => {
-    console.log("Serving React App");
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
 // Get all to-do items
 app.get('/todos', (req, res) => {
-  const sql = 'SELECT * FROM todos';
-  db.query(sql, (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
+    const sql = 'SELECT * FROM todos';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching todos:', err);
+            return res.status(500).json({ error: 'Failed to fetch todos' });
+        }
+        res.json(results);
+    });
 });
 
 // Add a new to-do item
@@ -66,7 +64,6 @@ app.put('/todos/:id', (req, res) => {
       console.error('Error updating todo:', err);
       return res.status(500).send('Server error');
     }
-    console.log('Updated todo with ID:', id, 'to completed status:', completed);
     res.send(result);
   });
 });
@@ -84,11 +81,12 @@ app.delete('/todos/:id', (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/index.html'));
+  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
 

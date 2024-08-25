@@ -35,12 +35,9 @@ const TodoList = () => {
 
     const toggleTodo = async (id, completed) => {
         try {
-            const response = await axios.put(`http://localhost:5000/todos/${id}`, {
+            await axios.put(`http://localhost:5000/todos/${id}`, {
                 completed: !completed
             });
-            console.log('Toggle response:', response.data); // Log the response data
-    
-            // Update the todos array with the new data
             setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
         } catch (error) {
             console.error("Error toggling todo:", error);
@@ -66,8 +63,6 @@ const TodoList = () => {
             document.body.classList.add('light-mode');
             document.body.classList.remove('dark-mode');
         }
-        console.log('Dark Mode:', newMode);
-        console.log('Body Classes:', document.body.className);
     };
 
     return (
@@ -84,8 +79,6 @@ const TodoList = () => {
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
                     placeholder="Add a new task"
-                    className={`${document.body.className} textarea-white`}
-                    style={{ transition: "all 0.3s ease" }}
                 />
                 <Button onClick={addTodo} className="ms-2">Add</Button>
             </Form>
@@ -115,6 +108,8 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
+
 
 
 
