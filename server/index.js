@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
-const path = require('path'); 
+const path = require('path');
 
 dotenv.config();
 
@@ -10,7 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Database connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -33,7 +32,7 @@ db.connect((err) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.send('Server is running');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Get all to-do items
@@ -66,7 +65,7 @@ app.put('/todos/:id', (req, res) => {
       console.error('Error updating todo:', err);
       return res.status(500).send('Server error');
     }
-    console.log('Updated todo with ID:', id, 'to completed status:', completed); // Log the updated status
+    console.log('Updated todo with ID:', id, 'to completed status:', completed);
     res.send(result);
   });
 });
@@ -81,12 +80,14 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
-// Serve the React app for any other route
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
