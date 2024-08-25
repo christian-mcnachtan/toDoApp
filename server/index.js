@@ -31,6 +31,17 @@ db.connect((err) => {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
+app.get('/todos', (req, res) => {
+    const sql = 'SELECT * FROM todos';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching todos:', err);
+            return res.status(500).json({ error: 'Failed to fetch todos' });
+        }
+        res.json(results);
+    });
+});
+
 // Get all to-do items
 app.get('/todos', (req, res) => {
     const sql = 'SELECT * FROM todos';

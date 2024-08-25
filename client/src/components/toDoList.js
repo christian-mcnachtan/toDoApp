@@ -15,7 +15,7 @@ const TodoList = () => {
 
     const fetchTodos = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/todos');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/todos`);
             setTodos(response.data);
         } catch (error) {
             console.error('Error fetching todos:', error);
@@ -25,7 +25,7 @@ const TodoList = () => {
     const addTodo = async () => {
         if (!newTodo) return;
         try {
-            const response = await axios.post('http://localhost:5000/todos', { title: newTodo });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/todos`, { title: newTodo });
             setTodos([...todos, response.data]);
             setNewTodo('');
         } catch (error) {
@@ -35,7 +35,7 @@ const TodoList = () => {
 
     const toggleTodo = async (id, completed) => {
         try {
-            await axios.put(`http://localhost:5000/todos/${id}`, {
+            await axios.put(`${process.env.REACT_APP_API_URL}/todos/${id}`, {
                 completed: !completed
             });
             setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
@@ -46,7 +46,7 @@ const TodoList = () => {
 
     const deleteTodo = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/todos/${id}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}/todos/${id}`);
             setTodos(todos.filter(todo => todo.id !== id));
         } catch (error) {
             console.error('Error deleting todo:', error);
@@ -108,6 +108,7 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
 
 
 
