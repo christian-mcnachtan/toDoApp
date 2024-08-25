@@ -14,25 +14,46 @@ const TodoList = () => {
     }, []);
 
     const fetchTodos = async () => {
-        const response = await axios.get('http://localhost:5000/todos');
-        setTodos(response.data);
+        try {
+            const response = await axios.get('http://localhost:5000/todos');
+            setTodos(response.data);
+        } catch (error) {
+            console.error('Error fetching todos:', error);
+        }
     };
 
     const addTodo = async () => {
         if (!newTodo) return;
-        const response = await axios.post('http://localhost:5000/todos', { title: newTodo });
-        setTodos([...todos, response.data]);
-        setNewTodo('');
+        try {
+            const response = await axios.post('http://localhost:5000/todos', { title: newTodo });
+            setTodos([...todos, response.data]);
+            setNewTodo('');
+        } catch (error) {
+            console.error('Error adding todo:', error);
+        }
     };
 
     const toggleTodo = async (id, completed) => {
-        const response = await axios.put(`http://localhost:5000/todos/${id}`, { completed: !completed });
-        setTodos(todos.map(todo => todo.id === id ? response.data : todo));
+        try {
+            const response = await axios.put(`http://localhost:5000/todos/${id}`, {
+                completed: !completed
+            });
+            console.log('Toggle response:', response.data); // Log the response data
+    
+            // Update the todos array with the new data
+            setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
+        } catch (error) {
+            console.error("Error toggling todo:", error);
+        }
     };
 
     const deleteTodo = async (id) => {
-        await axios.delete(`http://localhost:5000/todos/${id}`);
-        setTodos(todos.filter(todo => todo.id !== id));
+        try {
+            await axios.delete(`http://localhost:5000/todos/${id}`);
+            setTodos(todos.filter(todo => todo.id !== id));
+        } catch (error) {
+            console.error('Error deleting todo:', error);
+        }
     };
 
     const toggleDarkMode = () => {
@@ -45,8 +66,8 @@ const TodoList = () => {
             document.body.classList.add('light-mode');
             document.body.classList.remove('dark-mode');
         }
-        console.log('Dark Mode:', newMode);  // Log the new dark mode state
-        console.log('Body Classes:', document.body.className);  // Log the body classes
+        console.log('Dark Mode:', newMode);
+        console.log('Body Classes:', document.body.className);
     };
 
     return (
@@ -64,7 +85,7 @@ const TodoList = () => {
                     onChange={(e) => setNewTodo(e.target.value)}
                     placeholder="Add a new task"
                     className={`${document.body.className} textarea-white`}
-                    style={{ transition: "all 0.3s ease" }}  // Optional: Smooth transition
+                    style={{ transition: "all 0.3s ease" }}
                 />
                 <Button onClick={addTodo} className="ms-2">Add</Button>
             </Form>
@@ -94,6 +115,7 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
 
 
 

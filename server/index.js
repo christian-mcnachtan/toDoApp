@@ -56,15 +56,21 @@ app.get('/todos', (req, res) => {
   });
   
   // Update a to-do item
-  app.put('/todos/:id', (req, res) => {
+// Update a to-do item
+app.put('/todos/:id', (req, res) => {
     const { id } = req.params;
-    const { title, completed } = req.body;
-    const sql = 'UPDATE todos SET title = ?, completed = ? WHERE id = ?';
-    db.query(sql, [title, completed, id], (err, result) => {
-      if (err) throw err;
-      res.json({ id, title, completed });
+    const { completed } = req.body;
+    const query = 'UPDATE todos SET completed = ? WHERE id = ?';
+
+    db.query(query, [completed, id], (err, result) => {
+        if (err) {
+            console.error('Error updating todo:', err);
+            return res.status(500).send('Server error');
+        }
+        console.log('Updated todo with ID:', id, 'to completed status:', completed); // Log the updated status
+        res.send(result);
     });
-  });
+});
   
   // Delete a to-do item
   app.delete('/todos/:id', (req, res) => {
