@@ -1,4 +1,4 @@
-name: Build and Deploy Node.js app to Azure Web App
+name: Build and Deploy Full Stack App to Azure Web App
 
 on:
   push:
@@ -10,34 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v4
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
 
-      - name: 'Set up Node.js'
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
+    - name: 'Set up Node.js'
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
 
-      - name: 'Install Server Dependencies'
-        run: npm install
-        working-directory: ./server
+    - name: 'Install Server Dependencies'
+      run: npm install
+      working-directory: ./server
 
-      - name: 'Install Client Dependencies'
-        run: npm install
-        working-directory: ./client
+    - name: 'Install Client Dependencies'
+      run: npm install
+      working-directory: ./client
 
-      - name: 'Build the React app'
-        run: npm run build
-        working-directory: ./client
+    - name: 'Build the React app'
+      run: npm run build
+      working-directory: ./client
 
-      - name: 'Zip build folder'
-        run: zip -r build.zip ./*
-        working-directory: ./client/build
+    - name: 'Deploy Backend to Azure Web App'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'McNacToDoApp' # Ensure this is your actual Azure Web App name
+        publish-profile: ${{ secrets.azurepublishsettings }}
+        package: ./server
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'McNacToDoApp'
-          publish-profile: ${{ secrets.azurePublishSettings }}
-          package: ./client/build/build.zip
+    - name: 'Deploy Frontend to Azure Web App'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'McNacToDoApp'
+        publish-profile: ${{ secrets.azurepublishsettings }}
+        package: ./client/build
 
