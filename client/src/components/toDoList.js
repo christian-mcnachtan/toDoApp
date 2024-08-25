@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, Form, Container } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
+    const [darkMode, setDarkMode] = useState(false);
 
     useEffect(() => {
         fetchTodos();
@@ -32,15 +35,36 @@ const TodoList = () => {
         setTodos(todos.filter(todo => todo.id !== id));
     };
 
+    const toggleDarkMode = () => {
+        const newMode = !darkMode;
+        setDarkMode(newMode);
+        if (newMode) {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        }
+        console.log('Dark Mode:', newMode);  // Log the new dark mode state
+        console.log('Body Classes:', document.body.className);  // Log the body classes
+    };
+
     return (
         <Container>
-            <h1 className="text-center my-4">Welcome to McNacTo-do App!</h1>
+            <div className="d-flex justify-content-between align-items-center">
+                <h1 className="text-center my-4">Welcome to McNacTo-do App!</h1>
+                <Button onClick={toggleDarkMode}>
+                    <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
+                </Button>
+            </div>
             <Form className="d-flex mb-4">
                 <Form.Control
-                    type="text"
+                    as="textarea"
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
                     placeholder="Add a new task"
+                    className={`${document.body.className} textarea-white`}
+                    style={{ transition: "all 0.3s ease" }}  // Optional: Smooth transition
                 />
                 <Button onClick={addTodo} className="ms-2">Add</Button>
             </Form>
@@ -70,6 +94,9 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
+
+
 
 
 
