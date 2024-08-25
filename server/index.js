@@ -7,14 +7,7 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-
-const corsOptions = {
-    origin: 'https://mcnactodoapp-d8bagdb5ccabgthq.eastus-01.azurewebsites.net', // Your frontend URL
-    optionsSuccessStatus: 200 
-  };
-
-app.use(cors(corsOptions));
-
+app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
@@ -37,7 +30,6 @@ db.connect((err) => {
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-
 
 // Get all to-do items
 app.get('/todos', (req, res) => {
@@ -96,5 +88,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
 
 
