@@ -7,7 +7,14 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+    origin: 'https://mcnactodoapp-d8bagdb5ccabgthq.eastus-01.azurewebsites.net', // Your frontend URL
+    optionsSuccessStatus: 200 
+  };
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 const db = mysql.createConnection({
@@ -31,16 +38,6 @@ db.connect((err) => {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
-app.get('/todos', (req, res) => {
-    const sql = 'SELECT * FROM todos';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching todos:', err);
-            return res.status(500).json({ error: 'Failed to fetch todos' });
-        }
-        res.json(results);
-    });
-});
 
 // Get all to-do items
 app.get('/todos', (req, res) => {
