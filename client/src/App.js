@@ -1,22 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import TodoList from './components/toDoList';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('http://localhost:5000/')
-      .then(response => {
-        setMessage(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
-
   return (
     <div className="App">
-      <h1>{message}</h1>
+      <TodoList />
     </div>
   );
 }
