@@ -31,8 +31,9 @@ db.connect((err) => {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('*', (req, res) => {
+    console.log("Serving React App");
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Get all to-do items
