@@ -30,15 +30,14 @@ jobs:
         run: npm run build
         working-directory: ./client
 
-      - name: Copy React build files to server's public directory
-        run: |
-          mkdir -p ./server/public
-          cp -r ./client/build/* ./server/public/
+      - name: 'Zip build folder'
+        run: zip -r build.zip ./*
+        working-directory: ./client/build
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'McNacToDoApp'
           publish-profile: ${{ secrets.azurePublishSettings }}
-          package: ./server
+          package: ./client/build/build.zip
 
