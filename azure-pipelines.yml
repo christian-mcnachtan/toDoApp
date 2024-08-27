@@ -25,7 +25,7 @@ steps:
   inputs:
     command: 'install'
     workingDir: 'server'
-    workingDir: 'client'
+
 - task: Npm@1
   displayName: 'Building Modules in /client'
   inputs:
