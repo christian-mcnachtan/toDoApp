@@ -33,14 +33,14 @@ jobs:
     - name: 'Deploy Backend to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'McNacToDoApp' # Ensure this is your actual Azure Web App name
+        app-name: 'McNacTodo' # Ensure this is your actual Azure Web App name
         publish-profile: ${{ secrets.azurepublishsettings }}
         package: ./server
 
     - name: 'Deploy Frontend to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'McNacToDoApp'
+        app-name: 'McNacTodo'
         publish-profile: ${{ secrets.azurepublishsettings }}
         package: ./client/build
 
